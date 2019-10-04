@@ -1,0 +1,1 @@
+This is a one-off to create 57x33, three panel canvas. The spec for this layout is at CanvasPrintThreePanel-Markup.png, with 3in wrap.

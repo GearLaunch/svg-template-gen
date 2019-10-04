@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg id="product-svg" version="1.1" 
+	xmlns="http://www.w3.org/2000/svg" 
+	xmlns:xlink="http://www.w3.org/1999/xlink" x="0.0" y="0.0" width="100%" height="100%" xml:space="preserve" viewBox="0.0 0.0 ${viewbox.width} ${viewbox.height}">
+	<defs>
+    <rect x="${canvas1.x}" y="${canvas1.y}" width="${canvas1.width}" height="${canvas1.height}" id="${canvas1.name}" />
+    <rect x="${canvas2.x}" y="${canvas2.y}" width="${canvas2.width}" height="${canvas2.height}" id="${canvas2.name}" />
+    <rect x="${canvas3.x}" y="${canvas3.y}" width="${canvas3.width}" height="${canvas3.height}" id="${canvas3.name}" />
+
+		<filter y="-2.3%" width="110%" height="110%" filterUnits="objectBoundingBox" id="${product.dShadow}" x="-0.2%">
+			<feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+			<feOffset dx="5" dy="6" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+			<feGaussianBlur stdDeviation="5.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+			<feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+			<feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+		</filter>
+
+		<mask id="${product.transparencyMask}" x="0" y="0" width="100%" height="100%">
+			<rect x="0" y="0" width="100%" height="100%" fill="#333" />
+			
+      <use xlink:href="#${canvas1.name}" fill="white" />
+			<use xlink:href="#${canvas2.name}" fill="white" />
+			<use xlink:href="#${canvas3.name}" fill="white" />
+		</mask>
+
+		<clipPath id="${product.frontRectClip}">
+      <use xlink:href="#${canvas1.name}" />
+      <use xlink:href="#${canvas2.name}" />
+      <use xlink:href="#${canvas3.name}" />
+		</clipPath>
+	</defs>
+
+	<!--bleed stroke color & width-->
+	<rect id="stroke-template" x="-1" y="-1" width="1" height="1" fill="none" stroke="#2caaef" stroke-width="3" stroke-dasharray="9 6" visibility="hidden" />
+
+	<!-- The product bounds -->
+	<rect 
+		id="product-bounds" 
+		x="0" 
+		y="0" 
+		width="${viewbox.width}"
+		height="${viewbox.height}"
+		fill="none" 
+		${!product.withHints ? '' : 'stroke="#2caaef" stroke-width="3" stroke-dasharray="9 6"'}
+	/>
+	
+	<!-- bleed guides-->
+	<rect x="${wrapSide}" y="0" width="${bounds.width}" height="${viewbox.height}" stroke-width="3" fill="none" stroke="#8A0000" stroke-dasharray="9 6" class="bleed-guides" />
+	<rect x="0" y="${wrapSide}" width="${viewbox.width}" height="${bounds.height}" stroke-width="3" fill="none" stroke="#8A0000" stroke-dasharray="9 6" class="bleed-guides" />
+
+	<!-- Constraint information -->
+	<rect 
+    id="canvas-front-rect" 
+    constraint="gte" 
+    x="${wrapSide}" 
+    y="${wrapSide}" 
+    width="${bounds.width}" 
+    height="${bounds.height}" 
+    fill="#FFFFFF"
+		${!product.withHints ? '' : 'fill="none" stroke="#d24dd1" stroke-width="5" stroke-dasharray="9 6"'}
+  />
+
+	<g id="shadow-elements">
+    <use xlink:href="#${canvas1.name}" fill="white" style="filter:url(#${product.dShadow})"/>
+    <use xlink:href="#${canvas2.name}" fill="white" style="filter:url(#${product.dShadow})"/>
+    <use xlink:href="#${canvas3.name}" fill="white" style="filter:url(#${product.dShadow})"/>
+	</g>
+
+	<g id="mask-transparency" mask="url(#${product.transparencyMask})">
+    <!-- Doesn't really do much, but we need it to clip the art on buyer side -->
+		<g id="mirrored-sides" display="none"></g>
+
+		<!-- The artwork image. -->
+		<image 
+      id="artwork-image" 
+      x="${!product.withHints ? 0 : ((bounds.width / 3.8) * -1)}" 
+      y="${!product.withHints ? 0 : (bounds.height / 5.8)}" 
+      width="${bounds.width}" 
+      height="${bounds.height}"
+      preserveAspectRatio="xMidYMid meet" 
+			clip-path="url(#${product.frontRectClip})"
+      ${!product.withHints ? '' : 'xlink:href="https://storage.cloud.google.com/gearlaunch-sandbox-08-blobs/5e2b45ce-6db7-4b29-8b09-198b786608ad"'}
+    />
+
+		<g id="mirror-host"></g>
+		
+		<!-- Screen object that will be used to manipulate artwork will be inserted after this element -->
+		<rect id="product-handle" x="-1" y="-1" width="1" height="1" fill="none" />
+	</g>
+	
+</svg>

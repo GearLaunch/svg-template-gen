@@ -1,0 +1,1 @@
+This is a one-off to create 29x14, three panel canvas. The spec for this layout is at MultiPanel-3-Horizontal-14x29-Markup.png, with 3in wrap.
